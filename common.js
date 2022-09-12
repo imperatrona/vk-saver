@@ -179,7 +179,7 @@ var uploadNum = 0;
 function upload(group, album, blob, url, src, pageUrl) {
   chrome.notifications.create('upload' + (++uploadNum), {
     type: 'progress',
-    iconUrl: 'icon-48.png',
+    iconUrl: 'images/icon-48.png',
     title: 'Загрузка изображения',
     message: 'Подождите, изображение загружается в альбом «' + album.title + '»...',
     progress: 0
@@ -193,7 +193,7 @@ function upload(group, album, blob, url, src, pageUrl) {
     if (pe.lengthComputable) {
       chrome.notifications.update('upload' + uploadNum, {
         type: 'progress',
-        iconUrl: 'icon-48.png',
+        iconUrl: 'images/icon-48.png',
         title: 'Загрузка изображения',
         message: 'Подождите, изображение загружается в альбом «' + album.title + '»...',
         progress: (100 * pe.loaded / pe.total) | 0
@@ -240,7 +240,7 @@ function upload(group, album, blob, url, src, pageUrl) {
 
           chrome.notifications.create('upload' + uploadNum + '-complete', {
             type: 'basic',
-            iconUrl: 'icon-48.png',
+            iconUrl: 'images/icon-48.png',
             title: 'Загрузка изображения',
             message: 'Изображение успешно загружено в альбом «' + album.title + '».',
             contextMessage: copied,
@@ -324,7 +324,7 @@ function api(method, params, callback) {
         if ((res.error.error_code == 10) || (res.error.error_code == 13) || (res.error.error_code == 5)) {
           var notification = new Notification(
             'Расширению «VK Photo Saver» требуется авторизация', {
-              icon: 'icon-48.png',
+              icon: 'images/icon-48.png',
               body: 'Для загрузки изображений в ВКонтакте нужно разрешить доступ. Щелкните здесь чтобы авторизоваться.'
             }
           );
@@ -335,7 +335,7 @@ function api(method, params, callback) {
         } else {
           var notification = new Notification(
             'Ошибка ' + res.error.error_code + ' при выполнении запроса «' + method + '»', {
-              icon: 'icon-48.png',
+              icon: 'images/icon-48.png',
               body: 'Произошла ошибка «' + res.error.error_msg + ' при обращении к API ВКонтакте. Сообщите разработчику.'
             }
           );
