@@ -14,6 +14,7 @@ function num(n,cs) {
 }
 
 var month = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+const userBrowser = chrome.runtime.getBrowserInfo == undefined ? "chrome" : "firefox";
 
 /*
 var access_token = localStorage['access_token']; // TODO: move all options to 'opts'
@@ -189,15 +190,17 @@ function upload(group, album, blob, url, src, pageUrl) {
   formData.append('file1', blob, 'file.jpg');
   const imageUrl = URL.createObjectURL(blob);
   var xhr = new XMLHttpRequest();
-  xhr.upload.onprogress = function(pe) {
-    if (pe.lengthComputable) {
-      chrome.notifications.update('upload' + uploadNum, {
-        type: 'progress',
-        iconUrl: 'images/icon-48.png',
-        title: 'Загрузка изображения',
-        message: 'Подождите, изображение загружается в альбом «' + album.title + '»...',
-        progress: (100 * pe.loaded / pe.total) | 0
-      }, function() {});
+  if (userBrowser == "chrome") {
+    xhr.upload.onprogress = function(pe) {
+      if (pe.lengthComputable) {
+        chrome.notifications.update('upload' + uploadNum, {
+          type: 'progress',
+          iconUrl: 'images/icon-48.png',
+          title: 'Загрузка изображения',
+          message: 'Подождите, изображение загружается в альбом «' + album.title + '»...',
+          progress: (100 * pe.loaded / pe.total) | 0
+        }, function() {});
+      }
     }
   }
   xhr.onreadystatechange = function(){
@@ -238,34 +241,41 @@ function upload(group, album, blob, url, src, pageUrl) {
             copied = 'Ссылка на страницу фотографии скопирована в буфер обмена.';
           }
 
-          chrome.notifications.create('upload' + uploadNum + '-complete', {
+          let notificationData = {
             type: 'basic',
             iconUrl: 'images/icon-48.png',
             title: 'Загрузка изображения',
             message: 'Изображение успешно загружено в альбом «' + album.title + '».',
             contextMessage: copied,
-            //imageUrl,
-            buttons: [{ title: 'Открыть страницу фотографии'}, { title: 'Открыть изображение' }]
-          }, function() {});
-
-          var clickNotification = function(notificationId, buttonId) {
-            if (notificationId == 'upload' + uploadNum + '-complete') {
-              if (buttonId == 0) {
-                window.open('http://vk.com/photo' + photo.owner_id + '_' + photo.id);
-              } else {
-                window.open(maxSize.url);
-              }
-              chrome.notifications.clear('upload' + uploadNum, function() {});
-            }
-          };
-          var closeNotification = function(notificationId, byUser) {
-            chrome.notifications.onButtonClicked.removeListener(clickNotification);
-            chrome.notifications.onClosed.removeListener(closeNotification);
           }
 
-          chrome.notifications.onButtonClicked.addListener(clickNotification);
-          chrome.notifications.onClosed.addListener(closeNotification);
+          if (userBrowser == chrome) {
+            chrome.notifications.create('upload' + uploadNum + '-complete', {
+              ...notificationData,
+              buttons: [{ title: 'Открыть страницу фотографии'}, { title: 'Открыть изображение' }]
+            }, function() {});
 
+            var clickNotification = function(notificationId, buttonId) {
+              if (notificationId == 'upload' + uploadNum + '-complete') {
+                if (buttonId == 0) {
+                  window.open('http://vk.com/photo' + photo.owner_id + '_' + photo.id);
+                } else {
+                  window.open(maxSize.url);
+                }
+                chrome.notifications.clear('upload' + uploadNum, function() {});
+              }
+            };
+            var closeNotification = function(notificationId, byUser) {
+              chrome.notifications.onButtonClicked.removeListener(clickNotification);
+              chrome.notifications.onClosed.removeListener(closeNotification);
+            }
+
+            chrome.notifications.onButtonClicked.addListener(clickNotification);
+            chrome.notifications.onClosed.addListener(closeNotification);
+          } else {
+            chrome.notifications.create('upload' + uploadNum + '-complete', notificationData, function() {});
+          }
+          
           setTimeout(function() {
             chrome.notifications.clear('upload' + uploadNum, function() {});
           }, 5000);
