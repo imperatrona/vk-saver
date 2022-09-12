@@ -156,7 +156,7 @@ function rebuildMenu(tabs) {
                 props: {
                   title: album.title,
                   onclick: function(info, tab) {
-                    uploadImage(group, album, info.srcUrl);
+                    uploadImage(group, album, info.srcUrl, info.pageUrl);
                   },
                   contexts: ['image']
                 }
@@ -179,7 +179,7 @@ function rebuildMenu(tabs) {
             props: {
               title: 'Загрузить в альбом «' + album.title + '»',
               onclick: function(info, tab) {
-                uploadImage(group, album, info.srcUrl);
+                uploadImage(group, album, info.srcUrl, info.pageUrl);
               },
               contexts: ['image']
             }
@@ -263,7 +263,7 @@ function rebuildMenu(tabs) {
 }
 rebuildMenu();
 
-function uploadImage(group, album, src) {
+function uploadImage(group, album, src, pageUrl) {
   if (!opts.accessToken) {
     chrome.tabs.create({ url: 'options.html' });
     return;
@@ -281,7 +281,7 @@ function uploadImage(group, album, src) {
     if (data.response) {
       upload_url = data.response.upload_url;
       if (blob && upload_url) {
-        upload(group, album, blob, upload_url, src);
+        upload(group, album, blob, upload_url, src, pageUrl);
       }
     }
   });
@@ -289,7 +289,7 @@ function uploadImage(group, album, src) {
   download(src, function(b) {
     blob = b;
     if (blob && upload_url) {
-      upload(group, album, blob, upload_url, src);
+      upload(group, album, blob, upload_url, src, pageUrl);
     }
   });
 }

@@ -52,6 +52,7 @@ loadOptions({
   showMessage: true,
   showPost: true,
   showFullPost: true,
+  saveSource: true,
 
   albums: [],
   afterUpload: false,
@@ -175,7 +176,7 @@ function download(url, callback) {
 }
 
 var uploadNum = 0;
-function upload(group, album, blob, url, src) {
+function upload(group, album, blob, url, src, pageUrl) {
   chrome.notifications.create('upload' + (++uploadNum), {
     type: 'progress',
     iconUrl: 'icon-48.png',
@@ -210,6 +211,9 @@ function upload(group, album, blob, url, src) {
       params.server = res.server;
       params.photos_list = res.photos_list;
       params.hash = res.hash;
+      if (opts.saveSource && pageUrl) {
+        params.caption = pageUrl;
+      }
 
       chrome.notifications.clear('upload' + uploadNum);
       api('photos.save', params, function(data) {

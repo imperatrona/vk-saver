@@ -255,6 +255,7 @@ check('tabs', 'showTabs');
 check('message', 'showMessage');
 check('post', 'showPost');
 check('full_post', 'showFullPost');
+check("save_source_url", "saveSource");
 
 radiobtn('radio_copy', function(e, id) {
   saveOptions({ afterUpload: ({ radio_copy_none: false, radio_copy_src: 'src', radio_copy_page: 'page' })[id] });
