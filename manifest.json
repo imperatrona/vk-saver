@@ -1,6 +1,6 @@
 {
   "name": "VK Saver",
-  "version": "2.6",
+  "version": "2.7",
   "manifest_version": 2,
   "description": "Позволяет сохранять фотографии и скриншоты со сторонних сайтов в альбомы ВКонтакте.",
   "icons": {
