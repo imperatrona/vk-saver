@@ -89,7 +89,7 @@ function loadAlbums(group_id) {
 function checkAccessToken() {
   ge('block_auth').style.display = opts.accessToken ? 'none' : 'block';
   ge('block_logged').style.display = opts.accessToken ? 'block' : 'none';
-  ge('block_settings').style.display = opts.accessToken ? 'block' : 'none';
+  ge('block_settings').style.display = opts.accessToken ? 'flex' : 'none';
 
   if (opts.accessToken) {
     loadGroups();
@@ -106,6 +106,7 @@ function checkAccessToken() {
     api('users.get', {}, function(data) {
       saveOptions({ userID: data.response[0].id, firstName: data.response[0].first_name, lastName: data.response[0].last_name });
 
+      console.log(opts.userID)
       ge('link_user').href = 'http://vk.com/id' + opts.userID;
       ge('link_user').innerHTML = opts.firstName + ' ' + opts.lastName;
     });
@@ -148,22 +149,25 @@ function rebuildSelects() {
       albumList.push('<option value=' + opts.albums[i].album.id + ' selected>' + opts.albums[i].album.title + '</option>');
     }
 
-    list.push('<select id="select_group' + i + '" style="width: 300px; margin-right: 10px">' + groupList.join('') +
-'</select><select id="select_album' + i + '" style="width: 300px; margin-right: 10px">' + albumList.join('') +
-'</select><a id="link_delete' + i + '" href="#" style="margin-right: 10px">×</a>');
+    list.push(`<div class="album-select">` +
+              `<div class="select-box">` +
+              `<select id="select_group-${i}" class="select_group">${groupList.join('')}</select>` +
+              `<select id="select_album-${i}" class="select_album">${albumList.join('')}</select>` +
+              `</div>` +
+              `<button class=delete id=delete-${i}><svg class=icon fill=none height=24 width=24 xmlns=http://www.w3.org/2000/svg><g stroke-linecap=round stroke-linejoin=round stroke-width=1.5><path d="M20.25 5.25H3.75M9.75 9.75v6M14.25 9.75v6M18.75 5.25V19.5a.75.75 0 0 1-.75.75H6a.75.75 0 0 1-.75-.75V5.25M15.75 5.25v-1.5a1.5 1.5 0 0 0-1.5-1.5h-4.5a1.5 1.5 0 0 0-1.5 1.5v1.5"/></g></svg></button>` +
+              `</div>`)
   }
-  list.push('<a id="link_add" href="#">добавить</a>');
-  ge('block_albums').innerHTML = list.join('');
+  ge('albums-block').innerHTML = list.join('');
 
   for (var i = 0; i < opts.albums.length; i++) {
     (function(i) {
-      ge('select_group' + i).onchange = function(e) {
+      ge('select_group-' + i).onchange = function(e) {
         selectGroup(i, parseInt(this.value));
       }
-      ge('select_album' + i).onchange = function(e) {
+      ge('select_album-' + i).onchange = function(e) {
         selectAlbum(i, parseInt(this.value));
       }
-      ge('link_delete' + i).onclick = function(e) {
+      ge('delete-' + i).onclick = function(e) {
         deleteAlbum(i);
         return false;
       }
@@ -212,13 +216,13 @@ function performAuth() {
 }
 
 function radiobtn(c, onclick) {
-  var radio = document.getElementsByClassName('radiobtn ' + c);
+  var radio = document.getElementsByClassName(c);
   var handler = function(e) {
     for (var i = 0; i < radio.length; i++) {
       if (radio[i] == this) {
-        radio[i].classList.add('on');
+        radio[i].checked = true;
       } else {
-        radio[i].classList.remove('on');
+        radio[i].checked = false;
       }
     }
     onclick.call(this, e, this.id);
@@ -229,9 +233,6 @@ function radiobtn(c, onclick) {
 }
 
 ge('button_auth').onclick = performAuth;
-ge('button_close').onclick = function() {
-  window.close();
-}
 ge('link_logout').onclick = function() {
   saveOptions({ accessToken: false });
   checkAccessToken();
@@ -241,15 +242,15 @@ ge('link_logout').onclick = function() {
 function check(id, opt) {
   var ch = ge('check_' + id);
   if (opts[opt]) {
-    ch.classList.add('on');
+    ch.checked = true;
   }
   ch.onclick = function(e) {
-    this.classList.toggle('on');
     var update = {};
-    update[opt] = this.classList.contains('on');
+    update[opt] = this.checked;
     saveOptions(update);
   }
 }
+
 check('album', 'showAlbum');
 check('tabs', 'showTabs');
 check('message', 'showMessage');
@@ -260,13 +261,16 @@ check("save_source_url", "saveSource");
 radiobtn('radio_copy', function(e, id) {
   saveOptions({ afterUpload: ({ radio_copy_none: false, radio_copy_src: 'src', radio_copy_page: 'page' })[id] });
 });
-if (opts.afterUpload == 'src') {
-  ge('radio_copy_src').classList.add('on');
-} else
-if (opts.afterUpload == 'page') {
-  ge('radio_copy_page').classList.add('on');
-} else {
-  ge('radio_copy_none').classList.add('on');
+
+switch (opts.afterUpload){
+  case 'src':
+    ge('radio_copy_src').checked = true;
+    break;
+  case 'page':
+    ge('radio_copy_page').checked = true;
+    break;
+  default:
+    ge('radio_copy_none').checked = true;
 }
 
 checkAccessToken();

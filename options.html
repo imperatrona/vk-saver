@@ -1,241 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
+
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark light">
+  <link rel="stylesheet" href="./css/options.css">
+  <title>VK Saver</title>
   <script src='common.js'></script>
-  <title>VK Photo Saver</title>
-  <style>
-    body {
-      background-color: #eee;
-      overflow-x: hidden;
-      margin: 0;
-    }
-    body, select {
-      font-family: Lucida Grande, Arial, tahoma, verdana, sans-serif; font-size: 12px;
-    }
-    .content {
-      width: 800px;
-      height: 100%;
-      margin: auto;
-      padding: 1px 16px 16px 16px;
-      background-color: #fff;
-      box-shadow: 3px 3px 0px #ccc;
-    }
-    a {
-      text-decoration: none;
-    }
-    a:hover, a:active {
-      text-decoration: underline;
-    }
-    .clear_fix:after {
-      content: '.';
-      display: block;
-      height: 0;
-      clear: both;
-      visibility: hidden;
-    }
-    * html .clear_fix {
-      height: 1%;
-    }
-    .clear_fix {
-      display: block;
-    }
-    .button_blue,
-    .button_gray {
-      text-align: center;
-      display: inline-block;
-      *display: inline;
-      position: relative;
-      line-height: normal;
-      zoom: 1;
-    }
-    .box_controls .button_blue,
-    .box_controls .button_gray {
-      margin: 2px 5px;
-    }
-    .button_blue button,
-    .button_gray button {
-      -webkit-border-radius: 2px;
-      -khtml-border-radius: 2px;
-      -moz-border-radius: 2px;
-      border-radius: 2px;
-      border: 1px solid;
-      background: none;
-      font-size: 12px;
-      margin: 0px;
-      cursor: pointer;
-      white-space: nowrap;
-      outline: none;
-      padding: 5px 16px 6px;
-      *padding: 5px 15px 3px;
-      font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
-      vertical-align: top;
-      overflow: visible;
-      line-height: normal;
-    }
-
-    .button_blue button {
-      border-top-color: #789ABF;
-      border-bottom-color: #5980A9;
-      border-left-color: #5980A9;
-      border-right-color: #5980A9;
-      color: #FFF;
-      text-shadow:0 1px 0 #45688E;
-      *border: 0;
-      background: url(/images/button_vk.png) #6181a6 repeat-x top;
-      background-position: 0px -16px;
-      *background-position: 0px -16px;
-    }
-    .button_blue button:hover,
-    .button_blue button.hover {
-      background-position: 0px -8px;
-    }
-    .button_blue button:active,
-    .button_blue button.active {
-      background: #5e80a5;
-      border: 1px solid #5e80a5;
-      position:relative;
-    }
-    .button_gray button {
-      border-top-color: #D3D3D3;
-      border-bottom-color: #AEAEAE;
-      border-left-color: #C7C7C7;
-      border-right-color: #C7C7C7;
-      color: #555;
-      text-shadow: 0 1px 0 #F6F6F6;
-      *border: 0;
-      background: #E9E9E9 url(/images/button_vk.png?1) repeat-x top;
-      background-position: 0px -59px;
-      cursor: default;
-    }
-    /*.button_gray button:hover,
-    .button_gray button.hover {
-      background-position: 0px -53px;
-      border-top-color: #D7D7D7;
-      border-bottom-color: #B7B7B7;
-      border-left-color: #CBCBCB;
-      border-right-color: #CBCBCB;
-    }*/
-
-    .fl {
-      float: left;
-    }
-    .fr {
-      float: right;
-    }
-
-    a {
-      color: #2B587A;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .checkbox {
-      cursor: pointer;
-      line-height: 1.27em;
-    }
-    .checkbox.disabled {
-      opacity: 0.5;
-      filter: alpha(opacity=50);
-    }
-    .checkbox div {
-      float: left;
-      width: 15px;
-      margin-right: 5px;
-      height: 14px;
-      margin-bottom: 2px;
-      background: url(/images/check.gif) 0px 0px no-repeat;
-    }
-    .checkbox:hover div {
-      background-position: 0px -28px;
-    }
-    .checkbox.disabled:hover div {
-      background-position: 0px 0px;
-    }
-    .checkbox.on div {
-      background-position: 0px -14px;
-    }
-    .checkbox.on:hover div {
-      background-position: 0px -42px;
-    }
-    .checkbox.disabled.on:hover div {
-      background-position: 0px -14px;
-    }
-    .radiobtn {
-      cursor: pointer;
-      line-height: 1.27em;
-    }
-    .radiobtn div {
-      float: left;
-      width: 15px;
-      margin-right: 5px;
-      height: 14px;
-      margin-bottom: 1px; /* Second line fix */
-      background: url(/images/radio.gif) 0px 0px no-repeat;
-    }
-    .radiobtn:hover div {
-      background-position: 0px -28px;
-    }
-    .radiobtn.disabled:hover div {
-      background-position: 0px 0px;
-    }
-    .radiobtn_hover div {
-      background-position: 0px -28px;
-    }
-    .radiobtn.on div {
-      background-position: 0px -14px;
-    }
-    .radiobtn.on:hover div {
-      background-position: 0px -42px;
-    }
-    .radiobtn.disabled.on:hover div {
-      background-position: 0px -14px;
-    }
-    .radiobtn.on.radiobtn_hover div {
-      background-position: 0px -42px;
-    }
-  </style>
 </head>
+
 <body>
-  <div class='content'>
-    <img class='fr' style='margin-top: 12px' src='images/icon-48.png'/>
-    <h2>Настройки расширения «VK Photo Saver»</h2>
-    <div id='block_auth'>
-      <p>Для начала работы с расширением необходимо разрешить ему доступ к вашим фотоальбомам на сайте ВКонтакте:</p>
-      <div style='text-align: center'><button id='button_auth'>Разрешить доступ</button></div>
-    </div>
-    <div id='block_logged' style='display: none'>
-      <p>Вы авторизованы как <a id='link_user' href='http://vk.com' target='_blank'></a> (<a id='link_logout' href='#'>выйти</a>)</p>
-    </div>
-    <div id='block_settings' style='display: none'>
-      <p>Отображать в контекстном меню изображений:</p>
-      <div style='margin: 12px 0' id='check_album' class='checkbox'><div></div><span>«Загрузить в альбом &lt;...&gt;»</span></div>
-      <div style='clear: both; padding: 0 20px 4px 20px'>
-        <p>Альбомы для быстрой загрузки:</p>
-        <div id='block_albums'></div>
-        <p>После загрузки:</p>
-        <div>
-          <div style='margin-right: 16px' id='radio_copy_none' class='radiobtn radio_copy fl'><div></div><span>Ничего не делать</span></div>
-          <div style='margin-right: 16px' id='radio_copy_src' class='radiobtn radio_copy fl'><div></div><span>Скопировать прямую ссылку на изображение</span></div>
-          <div style='margin-right: 16px' id='radio_copy_page' class='radiobtn radio_copy fl'><div></div><span>Скопировать ссылку на страницу фото</span></div>
-        </div>
-        <div style='clear: both'></div>
-        <div style='margin: 12px 0' id='check_save_source_url' class='checkbox'><div></div><span>Сохранить ссылку на страницу с оригиналом в описании к фото</span></div>
+  <div class="container">
+    <header>
+      <img class="favicon" src="./images/icon.svg" alt="Icon">
+      <h1 class="title">VK Saver</h1>
+      <div id="block_logged" class="profile">
+        <a id="link_user" class="user" href="http://vk.com" target='_blank'></a>
+        <button id="link_logout" class="logout">выйти</button>
       </div>
-      <div style='margin: 12px 0' id='check_tabs' class='checkbox'><div></div><span>«Прикрепить к записи на стене &lt;...&gt;/к диалогу &lt;...&gt;» (в одной из открытых вкладок)</span></div>
-      <div style='clear: both'></div>
-      <div style='margin: 12px 0' id='check_message' class='checkbox'><div></div><span>«Прикрепить к сообщению...» (в новой вкладке)</span></div>
-      <div style='clear: both'></div>
-      <div style='margin: 12px 0' id='check_post' class='checkbox'><div></div><span>«Прикрепить к новой записи...» (в новой вкладке)</span></div>
-      <div style='clear: both'></div>
-      <div style='margin: 12px 0' id='check_full_post' class='checkbox'><div></div><span>«Прикрепить весь пост к новой записи...» (только для Tumblr)</span></div>
-      <div style='clear: both'></div>
-      <div style='text-align: center; margin-top: 16px'><button id='button_close'>Закрыть</button></div>
-    </div>
+    </header>
+
+    <main id="block_auth" class="auth">
+      <div class="box">
+        <p>Для начала работы с расширением необходимо разрешить ему доступ к вашим фотоальбомам на
+          сайте ВКонтакте:</p>
+        <button class="add" id="button_auth">Разрешить доступ</button>
+      </div>
+    </main>
+
+    <main id="block_settings">
+      <p class="description">Добавить в контекстное меню:</p>
+      <div class="box">
+        <input type="checkbox" id="check_album" />
+        <label for="check_album">Загрузить в альбом</label>
+
+        <div class="preferences">
+          <div class="albums">
+            <p class="meta">Альбомы:</p>
+            <div id="albums-block">
+            </div>
+            <button id="link_add" class="add">Добавить</button>
+          </div>
+
+          <div class="after-donwload">
+            <p class="meta">После загрузки: </p>
+            <div class="radio">
+              <input class="radio_copy" type="radio" id="radio_copy_none" name="after-donwload" value="none" checked>
+              <label for="radio_copy_none">Ничего не делать</label>
+            </div>
+            <div class="radio">
+              <input class="radio_copy" type="radio" id="radio_copy_src" name="after-donwload" value="copy_src">
+              <label for="radio_copy_src">Скопировать ссылку на изображение</label>
+            </div>
+            <div class="radio">
+              <input class="radio_copy" type="radio" id="radio_copy_page" name="after-donwload" value="copy_page">
+              <label for="radio_copy_page">Скопировать ссылку на страницу фото</label>
+            </div>
+
+            <input type="checkbox" id="check_save_source_url" />
+            <label for="check_save_source_url">Сохранить ссылку на оригинал в описание</label>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="box">
+        <input type="checkbox" id="check_message" />
+        <label for="check_message">Прикрепить к сообщению</label>
+      </div>
+
+      <div class="box">
+        <input type="checkbox" id="check_post" />
+        <label for="check_post">Прикрепить к новой записи</label>
+      </div>
+
+      <div class="box">
+        <input type="checkbox" id="check_full_post" />
+        <label for="check_full_post">Прикрепить пост с Tumblr к новой записи</label>
+      </div>
+
+      <div class="box">
+        <input type="checkbox" id="check_tabs" />
+        <label for="check_tabs">Прикрепить к сообщению или публикации в одной из открытых вкладок</label>
+      </div>
+    </main>
+
+    <footer>
+      <a href="https://github.com/imperatrona/vk-saver">
+        <svg class="icon" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M7.875 21.75a2.25 2.25 0 0 0 2.25-2.25V15M16.125 21.75a2.25 2.25 0 0 1-2.25-2.25V15M14.25 15h1.5A2.25 2.25 0 0 1 18 17.25V18a2.25 2.25 0 0 0 2.25 2.25M9.75 15h-1.5A2.25 2.25 0 0 0 6 17.25V18a2.25 2.25 0 0 1-2.25 2.25M6.048 7.191A4.866 4.866 0 0 1 6.375 3a4.871 4.871 0 0 1 4.109 2.25v0h3.032v0A4.871 4.871 0 0 1 17.625 3a4.865 4.865 0 0 1 .327 4.191v0c.521.752.8 1.645.798 2.559v.75a4.5 4.5 0 0 1-4.5 4.5h-4.5a4.5 4.5 0 0 1-4.5-4.5v-.75a4.48 4.48 0 0 1 .798-2.559h0Z" />
+          </g>
+        </svg>
+      </a>
+    </footer>
   </div>
-<script src='options.js'></script>
+  <script src='options.js'></script>
+
 </body>
+
 </html>
