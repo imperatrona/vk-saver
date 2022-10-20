@@ -1,4 +1,4 @@
-VK Photo Saver
+VK Saver
 ==============
 
-Google Chrome extension for uploading images (and making screenshots) from web to VK.
+Google Chrome & Firefox extension for uploading images (and making screenshots) from web to VK.

@@ -333,7 +333,7 @@ function api(method, params, callback) {
       if (!callback(res) && res.error) {
         if ((res.error.error_code == 10) || (res.error.error_code == 13) || (res.error.error_code == 5)) {
           var notification = new Notification(
-            'Расширению «VK Photo Saver» требуется авторизация', {
+            'Расширению «VK Saver» требуется авторизация', {
               icon: 'images/icon-48.png',
               body: 'Для загрузки изображений в ВКонтакте нужно разрешить доступ. Щелкните здесь чтобы авторизоваться.'
             }

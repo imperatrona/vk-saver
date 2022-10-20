@@ -44,13 +44,13 @@
             }
           }
         } else {
-          console.log('VK Photo Saver', 'addMedia target is not specified! Iterating.');
+          console.log('VK Saver', 'addMedia target is not specified! Iterating.');
           for (var j in cur.addMedia) {
             if (j > id) id = j;
           }
         }
         if (id == -1) {
-          console.log('VK Photo Saver', 'addMedia target is not found (were looking for ' + event.data.target + ')! Aborting.');
+          console.log('VK Saver', 'addMedia target is not found (were looking for ' + event.data.target + ')! Aborting.');
           return;
         }
         clearInterval(retryTimer);
